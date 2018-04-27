@@ -79,6 +79,8 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
 
   std::string GetDisplayId() const;
 
+  void SetWindowSurfaceId(int surface_id) override;
+
  protected:
   // Overridden from DesktopWindowTreeHost:
   void Init(const views::Widget::InitParams& params) override;
@@ -286,6 +288,7 @@ class VIEWS_EXPORT DesktopWindowTreeHostOzone
   gfx::Rect previous_maximize_bounds_;
   gfx::AcceleratedWidget window_;
   base::string16 title_;
+  int pending_surface_id_;
 
   // Owned by DesktopNativeWidgetAura.
 #if defined(OS_WEBOS)
