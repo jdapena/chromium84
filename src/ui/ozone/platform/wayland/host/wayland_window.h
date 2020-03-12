@@ -13,6 +13,7 @@
 #include "base/containers/flat_set.h"
 #include "base/gtest_prod_util.h"
 #include "base/memory/ref_counted.h"
+#include "base/timer/timer.h"
 #include "ui/events/platform/platform_event_dispatcher.h"
 #include "ui/gfx/geometry/rect.h"
 #include "ui/gfx/native_widget_types.h"
@@ -95,6 +96,8 @@ class WaylandWindow : public PlatformWindow, public PlatformEventDispatcher {
     return entered_outputs_ids_;
   }
 
+  WaylandConnection* connection() { return connection_; }
+
   // Returns current type of the window.
   PlatformWindowType type() const { return type_; }
 
@@ -107,7 +110,12 @@ class WaylandWindow : public PlatformWindow, public PlatformEventDispatcher {
   void SetBounds(const gfx::Rect& bounds) override;
   gfx::Rect GetBounds() override;
   void SetSurfaceId(int surface_id) override;
+  void SetAglBackground(void) override;
+  void SetAglReady(void) override;
+  void SetAglPanel(int edge) override;
+  void SetAglActivateApp(std::string app) override;
   void SetTitle(const base::string16& title) override;
+  void SetAppId(const base::string16& title) override;
   void SetCapture() override;
   void ReleaseCapture() override;
   bool HasCapture() const override;
@@ -200,7 +208,6 @@ class WaylandWindow : public PlatformWindow, public PlatformEventDispatcher {
   WaylandWindow(PlatformWindowDelegate* delegate,
                 WaylandConnection* connection);
 
-  WaylandConnection* connection() { return connection_; }
   PlatformWindowDelegate* delegate() { return delegate_; }
 
   // Sets bounds in dip.
@@ -223,6 +230,8 @@ class WaylandWindow : public PlatformWindow, public PlatformEventDispatcher {
 
   // Returns a root parent window.
   WaylandWindow* GetRootParentWindow();
+
+  void SetReadyCallback();
 
   // Install a surface listener and start getting wl_output enter/leave events.
   void AddSurfaceListener();
@@ -302,6 +311,8 @@ class WaylandWindow : public PlatformWindow, public PlatformEventDispatcher {
 
   // The type of the current WaylandWindow object.
   ui::PlatformWindowType type_ = ui::PlatformWindowType::kWindow;
+
+  base::OneShotTimer set_ready_timer_;
 
   DISALLOW_COPY_AND_ASSIGN(WaylandWindow);
 };

@@ -43,6 +43,9 @@ UI_BASE_EXPORT extern const char kUseSystemClipboard[];
 UI_BASE_EXPORT extern const char kDisallowNonExactResourceReuse[];
 UI_BASE_EXPORT extern const char kMangleLocalizedStrings[];
 
+UI_BASE_EXPORT extern const char kAglAppId[];
+UI_BASE_EXPORT extern const char kIsAglShell[];
+
 }  // namespace switches
 
 #endif  // UI_BASE_UI_BASE_SWITCHES_H_

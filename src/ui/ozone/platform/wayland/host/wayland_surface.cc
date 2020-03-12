@@ -4,9 +4,12 @@
 
 #include "ui/ozone/platform/wayland/host/wayland_surface.h"
 
+#include "base/command_line.h"
+#include "base/strings/utf_string_conversions.h"
 #include "ui/base/dragdrop/drag_drop_types.h"
 #include "ui/base/dragdrop/os_exchange_data.h"
 #include "ui/base/hit_test.h"
+#include "ui/base/ui_base_switches.h"
 #include "ui/gfx/native_widget_types.h"
 #include "ui/ozone/platform/wayland/host/shell_object_factory.h"
 #include "ui/ozone/platform/wayland/host/shell_surface_wrapper.h"
@@ -49,6 +52,12 @@ bool WaylandSurface::CreateShellSurface() {
   SetSizeConstraints();
   TriggerStateChanges();
   return true;
+}
+
+void WaylandSurface::SetAppId(const base::string16& app_id) {
+  DCHECK(shell_surface_);
+  shell_surface_->SetAppId(base::UTF16ToUTF8(app_id));
+  connection()->ScheduleFlush();
 }
 
 void WaylandSurface::ApplyPendingBounds() {
@@ -346,6 +355,14 @@ bool WaylandSurface::OnInitialize(PlatformWindowInitProperties properties) {
   }
   ///@}
   app_id_ = properties.wm_class_class;
+
+  base::CommandLine* command_line = base::CommandLine::ForCurrentProcess();
+  if (command_line->HasSwitch(switches::kAglAppId)) {
+      auto app_id = command_line->GetSwitchValueASCII(switches::kAglAppId);
+      app_id_ = app_id;
+      shell_surface_->SetAppId(app_id_);
+      LOG(INFO) << "App id: " << app_id_;
+  }
   return true;
 }
 

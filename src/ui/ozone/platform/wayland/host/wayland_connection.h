@@ -10,6 +10,8 @@
 #include <vector>
 
 #include <ivi-application-client-protocol.h>
+#include <agl-shell-client-protocol.h>
+#include <agl-shell-desktop-client-protocol.h>
 
 #include "ui/gfx/buffer_types.h"
 #include "ui/gfx/native_widget_types.h"
@@ -22,6 +24,8 @@
 #include "ui/ozone/platform/wayland/host/wayland_data_device_manager.h"
 #include "ui/ozone/platform/wayland/host/wayland_data_source.h"
 #include "ui/ozone/platform/wayland/host/wayland_window_manager.h"
+#include "ui/ozone/platform/wayland/agl_shell_wrapper.h"
+#include "ui/ozone/platform/wayland/agl_shell_desktop_wrapper.h"
 
 #if defined(USE_NEVA_APPRUNTIME)
 #include "ui/ozone/platform/wayland/host/wayland_seat.h"
@@ -66,6 +70,8 @@ class WaylandConnection {
   xdg_wm_base* shell() const { return shell_.get(); }
   zxdg_shell_v6* shell_v6() const { return shell_v6_.get(); }
   ivi_application* ivi_shell() const { return ivi_application_; }
+  agl_shell *ashell() const { return agl_shell_.get(); }
+  agl_shell_desktop *ashell_desktop() const { return agl_shell_desktop_.get(); }
 #if !defined(USE_NEVA_APPRUNTIME)
   wl_seat* seat() const { return seat_.get(); }
 #endif  // !defined(USE_NEVA_APPRUNTIME)
@@ -141,6 +147,9 @@ class WaylandConnection {
 #endif  // !defined(USE_NEVA_APPRUNTIME)
 
   WaylandClipboard* clipboard() const { return clipboard_.get(); }
+
+  ui::AglShell *agl_shell_manager;
+  ui::AglShellDesktop *agl_shell_desktop_manager;
 
   WaylandDataSource* drag_data_source() const {
     return dragdrop_data_source_.get();
@@ -232,6 +241,13 @@ class WaylandConnection {
   // xdg_wm_base_listener
   static void Ping(void* data, xdg_wm_base* shell, uint32_t serial);
 
+  // agl_shell_desktop listener
+  static void AglDesktopAppIdEvent(void *data, struct agl_shell_desktop *agl_shell_desktop,
+                                   const char *app_id);
+  static void AglDesktopAppStateEvent(void *data, struct agl_shell_desktop *agl_shell_desktop,
+                                      const char *app_id, const char *app_data,
+                                      uint32_t app_state, uint32_t app_role);
+
   uint32_t compositor_version_ = 0;
   wl::Object<wl_display> display_;
   wl::Object<wl_registry> registry_;
@@ -242,6 +258,8 @@ class WaylandConnection {
 #endif  // !defined(USE_NEVA_APPRUNTIME)
   wl::Object<xdg_wm_base> shell_;
   wl::Object<zxdg_shell_v6> shell_v6_;
+  wl::Object<agl_shell> agl_shell_;
+  wl::Object<agl_shell_desktop> agl_shell_desktop_;
   // TODO(msisov): use wl::Object.
   ivi_application* ivi_application_ = nullptr;
   wl::Object<wp_presentation> presentation_;

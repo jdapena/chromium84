@@ -5,6 +5,8 @@
 #ifndef UI_OZONE_PLATFORM_WAYLAND_COMMON_WAYLAND_OBJECT_H_
 #define UI_OZONE_PLATFORM_WAYLAND_COMMON_WAYLAND_OBJECT_H_
 
+#include <agl-shell-client-protocol.h>
+#include <agl-shell-desktop-client-protocol.h>
 #include <wayland-client.h>
 #include <memory>
 
@@ -52,6 +54,18 @@ namespace wl {
 
 template <typename T>
 struct ObjectTraits;
+
+template <>
+struct ObjectTraits<agl_shell> {
+  static const wl_interface* interface;
+  static void (*deleter)(agl_shell*);
+};
+
+template <>
+struct ObjectTraits<agl_shell_desktop> {
+  static const wl_interface* interface;
+  static void (*deleter)(agl_shell_desktop*);
+};
 
 template <>
 struct ObjectTraits<gtk_primary_selection_device_manager> {
