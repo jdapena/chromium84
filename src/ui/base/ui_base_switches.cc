@@ -101,6 +101,4 @@ const char kUseSystemClipboard[] = "use-system-clipboard";
 // webapp
 const char kAglAppId[] = "agl-appid";
 
-const char kLibhomescreenPort[] = "hs-port";
-
 }  // namespace switches

@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include <string>
-#include <libhomescreen.hpp>
 
 struct agl_shell_desktop;
 
@@ -13,7 +12,7 @@ class WaylandConnection;
 
 class AglShellDesktop {
 public:
-  AglShellDesktop(WaylandConnection *connection, std::string app_id, int port);
+  AglShellDesktop(WaylandConnection *connection, std::string app_id);
   ~AglShellDesktop();
 
   AglShellDesktop(const AglShellDesktop&) = delete;
@@ -23,7 +22,6 @@ private:
   WaylandConnection *connection_;
   struct agl_shell_desktop *agl_shell_desktop_;
   std::string app_id_;
-  LibHomeScreen homescreen_;
 };
 
 }  // namespace ui

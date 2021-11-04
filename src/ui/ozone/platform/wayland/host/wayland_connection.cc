@@ -458,17 +458,7 @@ void WaylandConnection::Global(void* data,
                                    &agl_shell_desktop_listener, connection);
 
     std::string app_id = command_line->GetSwitchValueASCII(switches::kAglAppId);
-    int port = 0;
-    if (command_line->HasSwitch(switches::kLibhomescreenPort)) {
-      if (!base::StringToInt(command_line->GetSwitchValueASCII(switches::kLibhomescreenPort), &port)) {
-          LOG(ERROR) << "Invalid libhomescreen port.";
-          return;
-      }
-    } else {
-      LOG(ERROR) << "No libhomescreen port provided.";
-      return;
-    }
-    connection->agl_shell_desktop_manager = new AglShellDesktop(connection, app_id, port);
+    connection->agl_shell_desktop_manager = new AglShellDesktop(connection, app_id);
   } else if (!connection->text_input_manager_v1_ &&
              strcmp(interface, "zwp_text_input_manager_v1") == 0) {
     connection->text_input_manager_v1_ = wl::Bind<zwp_text_input_manager_v1>(

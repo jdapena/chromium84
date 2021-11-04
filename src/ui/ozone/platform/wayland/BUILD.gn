@@ -261,7 +261,6 @@ source_set("wayland") {
 
   configs += [
     ":wayland-egl",
-    "//build/config/linux/libhomescreen",
     "//third_party/khronos:khronos_headers",
   ]
 }
